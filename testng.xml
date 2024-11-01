@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All PetStore API Tests">
+    <test verbose="2" name="Pet Controller Tests">
+        <classes>
+            <class name="test.petStoreTests.PetTests">
+                <methods>
+                    <include name="postPetUploadImageTest"/>
+                    <include name="postAddANewAvailablePetToTheStoreTest"/>
+                    <include name="postAddANewPendingPetToTheStoreTest"/>
+                    <include name="postAddANewSoldPetToTheStoreTest"/>
+                    <include name="putUpdateExistingPetTest"/>
+                    <include name="getAndFindPetsByAvailableStatusTest"/>
+                    <include name="getAndFindPetsByPendingStatusTest"/>
+                    <include name="getAndFindPetsBySoldStatusTest"/>
+                    <include name="getPetByIdTest"/>
+                    <include name="postPetByIdAvailableStatusTest"/>
+                    <include name="postPetByIdPendingStatusTest"/>
+                    <include name="postPetByIdSoldStatusTest"/>
+                    <include name="deletePetTest"/>
+                    <include name="postPetById"/>
+                    <include name="DeletePet"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test verbose="2" name="Store Controller Tests">
+        <classes>
+            <class name="test.petStoreTests.StoreTests">
+                <methods>
+                    <include name="GetInventoryTest"/>
+                    <include name="PostStoreOrderTest"/>
+                    <include name="getPurchaseOrderByIdTest"/>
+                    <include name="deletePurchaseOrderByIdTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test verbose="2" name="User Controller Tests">
+        <classes>
+            <class name="test.petStoreTests.UserTests">
+                <methods>
+                    <include name="postCreatesListOfUsersTest"/>
+                    <include name="postCreateUserTest"/>
+                    <include name="getUserByUsernameTest"/>
+                    <include name="putUpdateUserTest"/>
+                    <include name="deleteUserTest"/>
+                    <include name="getLoginUserTest"/>
+                    <include name="getLogoutUserTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
