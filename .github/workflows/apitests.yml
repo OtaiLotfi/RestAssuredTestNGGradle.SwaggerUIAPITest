@@ -26,11 +26,17 @@ jobs:
           wget https://repo.maven.apache.org/maven2/com/beust/jcommander/1.72/jcommander-1.72.jar
           wget https://repo.maven.apache.org/maven2/com/google/guava/guava/29.0-jre/guava-29.0-jre.jar
           wget https://repo.maven.apache.org/maven2/com/google/inject/guice/4.2.3/guice-4.2.3.jar  # Guice dependency for Stage class
-          
+
+      - name: Compile tests
+        run: |
+          # Compile the test classes
+          mkdir -p target/classes
+          javac -d target/classes -cp ".:testng-7.1.0.jar:jcommander-1.72.jar:guava-29.0-jre.jar:guice-4.2.3.jar" src/test/java/test/petStoreTests/*.java
+
       - name: Run TestNG tests
         run: |
-          # Run tests with the manually downloaded dependencies
-          java -cp "testng-7.1.0.jar:jcommander-1.72.jar:guava-29.0-jre.jar:guice-4.2.3.jar:." org.testng.TestNG testng.xml
+          # Run tests with the manually downloaded dependencies and the compiled test classes
+          java -cp "testng-7.1.0.jar:jcommander-1.72.jar:guava-29.0-jre.jar:guice-4.2.3.jar:target/classes" org.testng.TestNG testng.xml
 
   job2:
     name: Generate Test Report
@@ -50,12 +56,18 @@ jobs:
           wget https://repo.maven.apache.org/maven2/com/beust/jcommander/1.72/jcommander-1.72.jar
           wget https://repo.maven.apache.org/maven2/com/google/guava/guava/29.0-jre/guava-29.0-jre.jar
           wget https://repo.maven.apache.org/maven2/com/google/inject/guice/4.2.3/guice-4.2.3.jar  # Guice dependency for Stage class
-          
+
+      - name: Compile tests
+        run: |
+          # Compile the test classes
+          mkdir -p target/classes
+          javac -d target/classes -cp ".:testng-7.1.0.jar:jcommander-1.72.jar:guava-29.0-jre.jar:guice-4.2.3.jar" src/test/java/test/petStoreTests/*.java
+
       - name: Generate and Upload Test Report
         run: |
           mkdir -p reports
           # Running tests with testng.xml directly
-          java -cp "testng-7.1.0.jar:jcommander-1.72.jar:guava-29.0-jre.jar:guice-4.2.3.jar:." org.testng.TestNG testng.xml
+          java -cp "testng-7.1.0.jar:jcommander-1.72.jar:guava-29.0-jre.jar:guice-4.2.3.jar:target/classes" org.testng.TestNG testng.xml
           mv target/surefire-reports/* reports/
 
       - name: Upload Test Report to GitHub
