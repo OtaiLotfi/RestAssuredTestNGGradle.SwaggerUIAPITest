@@ -17,21 +17,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-
-      - name: Install dependencies using Maven
+      - name: Install dependencies for TestNG
         run: |
           sudo apt-get update
           sudo apt-get install maven -y
+          # Install TestNG dependency manually, if needed
+          curl -O https://repo.maven.apache.org/maven2/org/testng/testng/7.1.0/testng-7.1.0.jar
 
       - name: Run TestNG tests
         run: |
-          mvn install
-          mvn test -Dtestng.suiteXmlFiles=testng.xml
+          # You might need to configure classpath to ensure TestNG is available
+          java -cp "testng-7.1.0.jar:." org.testng.TestNG testng.xml
 
   job2:
     name: Generate Test Report
@@ -42,21 +38,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-
-      - name: Install dependencies using Maven
+      - name: Install dependencies for TestNG
         run: |
           sudo apt-get update
           sudo apt-get install maven -y
+          # Install TestNG dependency manually, if needed
+          curl -O https://repo.maven.apache.org/maven2/org/testng/testng/7.1.0/testng-7.1.0.jar
 
       - name: Generate and Upload Test Report
         run: |
           mkdir -p reports
-          mvn test -Dtestng.suiteXmlFiles=testng.xml
+          # Running tests with testng.xml directly
+          java -cp "testng-7.1.0.jar:." org.testng.TestNG testng.xml
           mv target/surefire-reports/* reports/
 
       - name: Upload Test Report to GitHub
