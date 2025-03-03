@@ -21,15 +21,17 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
-          distribution: 'temurin'  # Updated to use Adoptium Temurin
+          distribution: 'temurin'
 
-      - name: Install dependencies
+      - name: Install dependencies using Maven
         run: |
-          ./mvnw install
+          sudo apt-get update
+          sudo apt-get install maven -y
 
       - name: Run TestNG tests
         run: |
-          ./mvnw test -Dtestng.suiteXmlFiles=testng.xml
+          mvn install
+          mvn test -Dtestng.suiteXmlFiles=testng.xml
 
   job2:
     name: Generate Test Report
@@ -44,11 +46,12 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
-          distribution: 'temurin'  
+          distribution: 'temurin'
 
-      - name: Install dependencies
+      - name: Install dependencies using Maven
         run: |
-          ./mvnw install
+          sudo apt-get update
+          sudo apt-get install maven -y
 
       - name: Generate and Upload Test Report
         run: |
