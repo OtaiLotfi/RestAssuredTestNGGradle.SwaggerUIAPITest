@@ -29,13 +29,14 @@ jobs:
 
       - name: Compile tests
         run: |
-          # Compile the test classes including dependencies from multiple source directories
+          # Create the target/classes directory if it doesn't exist
           mkdir -p target/classes
+          
+          # Compile the Java files, excluding non-Java files
           javac -d target/classes \
                 -cp ".:testng-7.1.0.jar:jcommander-1.72.jar:guava-29.0-jre.jar:guice-4.2.3.jar" \
                 src/test/java/test/petStoreTests/*.java \
-                src/test/java/endpoints/*.java \
-                src/test/java/payloads/petStore/*.java
+                src/test/java/endpoints/*.java
 
       - name: Run TestNG tests
         run: |
@@ -63,13 +64,14 @@ jobs:
 
       - name: Compile tests
         run: |
-          # Compile the test classes including dependencies from multiple source directories
+          # Create the target/classes directory if it doesn't exist
           mkdir -p target/classes
+          
+          # Compile the Java files, excluding non-Java files
           javac -d target/classes \
                 -cp ".:testng-7.1.0.jar:jcommander-1.72.jar:guava-29.0-jre.jar:guice-4.2.3.jar" \
                 src/test/java/test/petStoreTests/*.java \
-                src/test/java/endpoints/*.java \
-                src/test/java/payloads/petStore/*.java
+                src/test/java/endpoints/*.java
 
       - name: Generate and Upload Test Report
         run: |
