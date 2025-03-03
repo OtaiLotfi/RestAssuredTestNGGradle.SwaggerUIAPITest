@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
-          distribution: 'adoptopenjdk'
+          distribution: 'temurin'  # Updated to use Adoptium Temurin
 
       - name: Install dependencies
         run: |
@@ -44,7 +44,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
-          distribution: 'adoptopenjdk'
+          distribution: 'temurin'  
 
       - name: Install dependencies
         run: |
