@@ -39,13 +39,15 @@ jobs:
 
       - name: Run Gradle build and tests, continue on failure
         run: |
-          gradle clean build --continue || true
+          gradle clean test --continue || true
+          ls -R build/test-results/  # Debug: List the contents of the test-results directory
 
       - name: Upload Test Reports as Artifact (v4)
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: build/test-results/
+          if-no-files-found: error  # Fail the job if no files are found
 
   job2:
     name: Generate Test Report
