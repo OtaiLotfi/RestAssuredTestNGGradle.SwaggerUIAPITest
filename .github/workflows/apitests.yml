@@ -92,4 +92,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: final-test-reports
-          path: build/allure-report/
+          path: build/allure-report/  # Ensure this is the correct path
