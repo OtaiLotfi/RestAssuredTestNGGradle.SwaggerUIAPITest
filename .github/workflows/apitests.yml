@@ -34,7 +34,6 @@ jobs:
 
       - name: Copy config.properties file
         run: |
-          # Copy the config.properties file from src/test/resources to the output directory
           mkdir -p build/resources/test
           cp src/test/resources/config.properties build/resources/test/
 
@@ -70,8 +69,8 @@ jobs:
         run: |
           gradle allureReport
 
-      - name: Upload Test Report to GitHub
-        uses: actions/upload-artifact@v2
+      - name: Upload Test Report to GitHub (new artifact method)
+        uses: actions/upload-artifact@v3
         with:
           name: test-report
           path: build/allure-report/
