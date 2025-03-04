@@ -92,4 +92,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: final-test-reports
-          path: build/allure-results/   # Ensure this matches the output location
+          path: build/test-results/allure-results/   # Make sure this matches the new location
