@@ -1,4 +1,5 @@
 name: Run API Tests
+
 on:
   push:
     branches:
@@ -69,10 +70,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Wait for artifact to be available (optional retry)
+      - name: Wait for artifact to be available (retry mechanism)
         run: |
           echo "Waiting for artifact to be available..."
-          sleep 10s  # Optional delay to ensure the artifact is available before download
+          # Retry mechanism: check every 5 seconds for 3 minutes (36 checks max)
+          for i in {1..36}; do
+            echo "Attempt $i to download artifact"
+            if actions/download-artifact@v4; then
+              break
+            else
+              echo "Artifact not found, retrying in 5 seconds..."
+              sleep 5
+            fi
+          done
 
       - name: Download Test Reports
         uses: actions/download-artifact@v4
