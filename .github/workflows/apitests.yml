@@ -80,6 +80,10 @@ jobs:
           echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
           source ~/.bashrc
 
+      - name: Ensure Allure Plugin is configured in Gradle
+        run: |
+          echo "plugins { id 'io.qameta.allure' version '2.10.0' }" >> build.gradle
+
       - name: Run Gradle build for report generation
         run: |
           gradle allureReport
