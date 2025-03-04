@@ -21,6 +21,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
+          distribution: 'adoptopenjdk'
 
       - name: Install dependencies for Gradle and TestNG
         run: |
@@ -48,6 +49,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
+          distribution: 'adoptopenjdk'
 
       - name: Install dependencies for Gradle and Allure
         run: |
