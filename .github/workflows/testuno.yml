@@ -1,5 +1,4 @@
-name: API Tests
-
+name: Run API Tests
 on:
   push:
     branches:
@@ -69,6 +68,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Wait for artifact to be available (optional retry)
+        run: |
+          echo "Waiting for artifact to be available..."
+          sleep 10s  # Optional delay to ensure the artifact is available before download
 
       - name: Download Test Reports
         uses: actions/download-artifact@v4
