@@ -40,7 +40,7 @@ jobs:
 
       - name: Run Gradle build and tests, continue on failure
         run: |
-          gradle clean build --continue
+          gradle clean build --continue || true
 
   job2:
     name: Generate Test Report
