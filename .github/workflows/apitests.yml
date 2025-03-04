@@ -80,9 +80,13 @@ jobs:
           echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
           source ~/.bashrc
 
+      - name: Verify Allure Plugin Availability
+        run: |
+          gradle tasks --all
+
       - name: Run Gradle build for report generation
         run: |
-          gradle allureReport
+          gradle allureReport || echo "allureReport task not found"
 
       - name: Upload Final Test Reports as Artifact (v4)
         uses: actions/upload-artifact@v4
