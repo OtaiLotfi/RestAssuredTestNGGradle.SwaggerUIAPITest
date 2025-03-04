@@ -41,6 +41,12 @@ jobs:
         run: |
           gradle clean build --continue || true
 
+      - name: Upload Test Reports as Artifact (v4)
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: build/test-results/
+
   job2:
     name: Generate Test Report
     runs-on: ubuntu-latest
@@ -49,6 +55,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Download Test Reports
+        uses: actions/download-artifact@v4
+        with:
+          name: test-reports
+          path: test-reports
+
+      - name: Display Test Report Files
+        run: ls -R test-reports
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -69,8 +84,8 @@ jobs:
         run: |
           gradle allureReport
 
-      - name: Upload Test Report to GitHub (new artifact method)
-        uses: actions/upload-artifact@v3
+      - name: Upload Final Test Reports as Artifact (v4)
+        uses: actions/upload-artifact@v4
         with:
-          name: test-report
+          name: final-test-reports
           path: build/allure-report/
