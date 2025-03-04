@@ -23,13 +23,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install dependencies for Gradle and TestNG
+      - name: Install Gradle
         run: |
-          sudo apt-get update
-          sudo apt-get install -y wget
-          wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
-          unzip gradle-7.6-bin.zip -d /opt/gradle
-          echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
+          wget https://services.gradle.org/distributions/gradle-8.2.1-bin.zip
+          unzip gradle-8.2.1-bin.zip -d /opt/gradle
+          echo "export PATH=\$PATH:/opt/gradle/gradle-8.2.1/bin" >> ~/.bashrc
           source ~/.bashrc
 
       - name: Copy config.properties file
@@ -73,13 +71,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install dependencies for Gradle and Allure
+      - name: Install Gradle
         run: |
-          sudo apt-get update
-          sudo apt-get install -y wget
-          wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
-          unzip gradle-7.6-bin.zip -d /opt/gradle
-          echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
+          wget https://services.gradle.org/distributions/gradle-8.2.1-bin.zip
+          unzip gradle-8.2.1-bin.zip -d /opt/gradle
+          echo "export PATH=\$PATH:/opt/gradle/gradle-8.2.1/bin" >> ~/.bashrc
           source ~/.bashrc
 
       - name: Verify Allure Plugin Availability
