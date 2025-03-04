@@ -84,12 +84,12 @@ jobs:
         run: |
           gradle tasks --all
 
-      - name: Run Gradle build for report generation
+      - name: Generate Allure Report
         run: |
-          gradle allureReport || echo "allureReport task not found"
+          gradle clean test allureReport || echo "allureReport task not found"
 
       - name: Upload Final Test Reports as Artifact (v4)
         uses: actions/upload-artifact@v4
         with:
           name: final-test-reports
-          path: build/allure-report/  # Ensure this is the correct path
+          path: build/allure-report/
