@@ -1,12 +1,12 @@
 plugins {
     id 'java'
-    id 'io.qameta.allure' version '2.24.0'  // Latest stable Allure plugin version
+    id 'io.qameta.allure' version '2.23.0'  // Updated to the latest stable version
 }
 
 def assured_version = '5.4.0'
 def apache_poi_version = '5.2.5'
 def slf4j_version = '2.0.13'
-def allure_version = '2.24.0'  // Match this with the plugin version
+def allure_version = '2.23.0'  // Updated to match the plugin version
 def apache_logging_version = '2.23.1'
 
 repositories {
