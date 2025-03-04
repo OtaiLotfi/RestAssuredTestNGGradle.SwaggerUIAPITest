@@ -17,31 +17,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies for TestNG
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+
+      - name: Install dependencies for Gradle and TestNG
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget openjdk-11-jdk
-          # Download TestNG and required dependencies manually
-          wget https://repo.maven.apache.org/maven2/org/testng/testng/7.1.0/testng-7.1.0.jar
-          wget https://repo.maven.apache.org/maven2/com/beust/jcommander/1.72/jcommander-1.72.jar
-          wget https://repo.maven.apache.org/maven2/com/google/guava/guava/29.0-jre/guava-29.0-jre.jar
-          wget https://repo.maven.apache.org/maven2/com/google/inject/guice/4.2.3/guice-4.2.3.jar  # Guice dependency for Stage class
+          sudo apt-get install -y wget
+          wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
+          unzip gradle-7.6-bin.zip -d /opt/gradle
+          echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
+          source ~/.bashrc
 
-      - name: Compile tests
+      - name: Run Gradle build and tests
         run: |
-          # Create the target/classes directory if it doesn't exist
-          mkdir -p target/classes
-          
-          # Compile the Java files, excluding non-Java files
-          javac -d target/classes \
-                -cp ".:testng-7.1.0.jar:jcommander-1.72.jar:guava-29.0-jre.jar:guice-4.2.3.jar" \
-                src/test/java/test/petStoreTests/*.java \
-                src/test/java/endpoints/*.java
-
-      - name: Run TestNG tests
-        run: |
-          # Run tests with the manually downloaded dependencies and the compiled test classes
-          java -cp "testng-7.1.0.jar:jcommander-1.72.jar:guava-29.0-jre.jar:guice-4.2.3.jar:target/classes" org.testng.TestNG testng.xml
+          gradle clean build
 
   job2:
     name: Generate Test Report
@@ -52,36 +44,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies for TestNG
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+
+      - name: Install dependencies for Gradle and Allure
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget openjdk-11-jdk
-          # Download TestNG and required dependencies manually
-          wget https://repo.maven.apache.org/maven2/org/testng/testng/7.1.0/testng-7.1.0.jar
-          wget https://repo.maven.apache.org/maven2/com/beust/jcommander/1.72/jcommander-1.72.jar
-          wget https://repo.maven.apache.org/maven2/com/google/guava/guava/29.0-jre/guava-29.0-jre.jar
-          wget https://repo.maven.apache.org/maven2/com/google/inject/guice/4.2.3/guice-4.2.3.jar  # Guice dependency for Stage class
+          sudo apt-get install -y wget
+          wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
+          unzip gradle-7.6-bin.zip -d /opt/gradle
+          echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
+          source ~/.bashrc
 
-      - name: Compile tests
+      - name: Run Gradle build for report generation
         run: |
-          # Create the target/classes directory if it doesn't exist
-          mkdir -p target/classes
-          
-          # Compile the Java files, excluding non-Java files
-          javac -d target/classes \
-                -cp ".:testng-7.1.0.jar:jcommander-1.72.jar:guava-29.0-jre.jar:guice-4.2.3.jar" \
-                src/test/java/test/petStoreTests/*.java \
-                src/test/java/endpoints/*.java
-
-      - name: Generate and Upload Test Report
-        run: |
-          mkdir -p reports
-          # Running tests with testng.xml directly
-          java -cp "testng-7.1.0.jar:jcommander-1.72.jar:guava-29.0-jre.jar:guice-4.2.3.jar:target/classes" org.testng.TestNG testng.xml
-          mv target/surefire-reports/* reports/
+          gradle allureReport
 
       - name: Upload Test Report to GitHub
         uses: actions/upload-artifact@v3
         with:
           name: test-report
-          path: reports/
+          path: build/allure-report/
