@@ -1,4 +1,4 @@
-name: Run API Tests and Generate Test Report
+name:  API Tests 
 
 on:
   push:
@@ -49,6 +49,11 @@ jobs:
         run: |
           echo "Listing all files in the build directory:"
           ls -R build/
+
+      - name: Check if test results were created
+        run: |
+          echo "Checking for test reports in build/test-results:"
+          ls -R build/test-results/
 
       - name: Upload Test Reports as Artifact (v4)
         uses: actions/upload-artifact@v4
