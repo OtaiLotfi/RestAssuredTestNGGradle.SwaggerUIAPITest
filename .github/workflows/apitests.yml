@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'temurin'  # Use temurin for AdoptOpenJDK
+          distribution: 'temurin'
 
       - name: Install dependencies for Gradle and TestNG
         run: |
@@ -31,6 +31,12 @@ jobs:
           unzip gradle-7.6-bin.zip -d /opt/gradle
           echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
           source ~/.bashrc
+
+      - name: Copy config.properties file
+        run: |
+          # Copy the config.properties file from src/test/resources to the output directory
+          mkdir -p build/resources/test
+          cp src/test/resources/config.properties build/resources/test/
 
       - name: Run Gradle build and tests
         run: |
@@ -49,7 +55,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'temurin'  # Use temurin for AdoptOpenJDK
+          distribution: 'temurin'
 
       - name: Install dependencies for Gradle and Allure
         run: |
