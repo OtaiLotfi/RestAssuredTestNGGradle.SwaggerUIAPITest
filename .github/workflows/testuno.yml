@@ -1,4 +1,4 @@
-name: API Tests with Rest Assured and Generate Test Report
+name: Run API Tests and Generate Test Report
 
 on:
   push:
@@ -37,12 +37,18 @@ jobs:
           mkdir -p build/resources/test
           cp src/test/resources/config.properties build/resources/test/
 
+      - name: Create test-results directory
+        run: |
+          mkdir -p build/test-results
+
       - name: Run Gradle build and tests, continue on failure
         run: |
           gradle clean build --continue || true
 
-      - name: List Test Report Files
-        run: ls -R build/test-results/
+      - name: List All Files in build Directory for Debugging
+        run: |
+          echo "Listing all files in the build directory:"
+          ls -R build/
 
       - name: Upload Test Reports as Artifact (v4)
         uses: actions/upload-artifact@v4
@@ -66,7 +72,9 @@ jobs:
           path: test-reports
 
       - name: List Downloaded Files
-        run: ls -R test-reports
+        run: |
+          echo "Listing downloaded files:"
+          ls -R test-reports
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
