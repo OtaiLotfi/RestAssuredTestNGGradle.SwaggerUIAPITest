@@ -1,12 +1,12 @@
 plugins {
     id 'java'
-    id 'io.qameta.allure' version '2.13.8'  // Use the latest compatible version
+    id 'io.qameta.allure' version '2.24.0'  // Latest stable Allure plugin version
 }
 
 def assured_version = '5.4.0'
 def apache_poi_version = '5.2.5'
 def slf4j_version = '2.0.13'
-def allure_version = '2.27.0'
+def allure_version = '2.24.0'  // Match this with the plugin version
 def apache_logging_version = '2.23.1'
 
 repositories {
@@ -21,7 +21,7 @@ dependencies {
     testImplementation "io.rest-assured:json-schema-validator:$assured_version"
 
     // TestNG dependency
-    testImplementation "org.testng:testng:7.10.2"  // Use the latest TestNG version
+    testImplementation "org.testng:testng:7.10.2"
 
     // Allure dependencies
     testImplementation "io.qameta.allure:allure-testng:$allure_version"
@@ -47,13 +47,13 @@ tasks.withType(JavaCompile) {
 }
 
 allure {
-    version = "$allure_version"  // Use the same Allure version as dependencies
+    version = "$allure_version"  // Use the same version as the plugin and dependencies
     autoconfigure = true
     aspectjweaver = true
     configuration = 'testImplementation'
 
     useTestNG {
-        version = "$allure_version"  // Use the same Allure version
+        version = "$allure_version"  // Use the same version
     }
 }
 
