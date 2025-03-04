@@ -71,7 +71,7 @@ jobs:
           gradle allureReport
 
       - name: Upload Test Report to GitHub
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: test-report
           path: build/allure-report/
