@@ -1,13 +1,3 @@
-name: Run API Tests and Generate Test Report
-
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
-
 jobs:
   job1:
     name: Run API Tests
@@ -41,6 +31,9 @@ jobs:
         run: |
           gradle clean build --continue || true
 
+      - name: List Test Report Files
+        run: ls -R build/test-results/
+
       - name: Upload Test Reports as Artifact (v4)
         uses: actions/upload-artifact@v4
         with:
@@ -62,7 +55,7 @@ jobs:
           name: test-reports
           path: test-reports
 
-      - name: Display Test Report Files
+      - name: List Downloaded Files
         run: ls -R test-reports
 
       - name: Set up JDK 17
