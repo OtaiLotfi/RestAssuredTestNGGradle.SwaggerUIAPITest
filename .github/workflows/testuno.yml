@@ -26,40 +26,34 @@ jobs:
       - name: Install dependencies for Gradle and TestNG
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget
+          sudo apt-get install -y wget unzip
           wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
           unzip gradle-7.6-bin.zip -d /opt/gradle
           echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
           source ~/.bashrc
+
+      - name: Verify Gradle Installation
+        run: gradle -v
 
       - name: Copy config.properties file
         run: |
           mkdir -p build/resources/test
           cp src/test/resources/config.properties build/resources/test/
 
-      - name: Create test-results directory
+      - name: Run Gradle build and tests
         run: |
-          mkdir -p build/test-results
+          ./gradlew clean test || true  # Ensures the job doesn't fail if tests fail
 
-      - name: Run Gradle build and tests, continue on failure
+      - name: List Test Report Files
         run: |
-          gradle clean build --continue || true
+          echo "Checking test reports directory:"
+          ls -R build/reports/tests/test/
 
-      - name: List All Files in build Directory for Debugging
-        run: |
-          echo "Listing all files in the build directory:"
-          ls -R build/
-
-      - name: Check if test results were created
-        run: |
-          echo "Checking for test reports in build/test-results:"
-          ls -R build/test-results/
-
-      - name: Upload Test Reports as Artifact (v4)
+      - name: Upload Test Reports
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
-          path: build/test-results/
+          path: build/reports/tests/test/
 
   job2:
     name: Generate Test Report
@@ -70,20 +64,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Wait for artifact to be available (retry mechanism)
-        run: |
-          echo "Waiting for artifact to be available..."
-          # Retry mechanism: check every 5 seconds for 3 minutes (36 checks max)
-          for i in {1..36}; do
-            echo "Attempt $i to download artifact"
-            if actions/download-artifact@v4; then
-              break
-            else
-              echo "Artifact not found, retrying in 5 seconds..."
-              sleep 5
-            fi
-          done
-
       - name: Download Test Reports
         uses: actions/download-artifact@v4
         with:
@@ -92,35 +72,11 @@ jobs:
 
       - name: List Downloaded Files
         run: |
-          echo "Listing downloaded files:"
+          echo "Downloaded files:"
           ls -R test-reports
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Install dependencies for Gradle and Allure
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget
-          wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
-          unzip gradle-7.6-bin.zip -d /opt/gradle
-          echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
-          source ~/.bashrc
-
-      - name: Verify Allure Plugin Availability
-        run: |
-          gradle tasks --all
-
-      - name: Run Gradle build for report generation
-        run: |
-          gradle clean test allureServe || echo "allureServe task not found"  # Use allureServe instead
-          ls -R build/allure-results/  # Check if the directory contains the allure results
-
-      - name: Upload Final Test Reports as Artifact (v4)
+      - name: Upload Final Test Reports
         uses: actions/upload-artifact@v4
         with:
           name: final-test-reports
-          path: build/allure-report/  # Upload Allure results from the custom path
+          path: test-reports
