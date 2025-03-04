@@ -84,12 +84,13 @@ jobs:
         run: |
           gradle tasks --all
 
-      - name: Generate Allure Report
+      - name: Run Gradle build for report generation
         run: |
           gradle clean test allureReport || echo "allureReport task not found"
+          ls -R build/allure-results/  # Check if the directory contains the allure results
 
       - name: Upload Final Test Reports as Artifact (v4)
         uses: actions/upload-artifact@v4
         with:
           name: final-test-reports
-          path: build/test-results/allure-results/   # Make sure this matches the new location
+          path: build/allure-results/   # Upload Allure results from the custom path
