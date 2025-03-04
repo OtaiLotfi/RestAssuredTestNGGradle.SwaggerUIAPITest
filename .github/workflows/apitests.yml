@@ -15,10 +15,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # ✅ Updated to latest stable version
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4  # ✅ Use latest setup-java version
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -29,7 +29,7 @@ jobs:
           sudo apt-get install -y wget unzip
           wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
           unzip gradle-7.6-bin.zip -d /opt/gradle
-          echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
+          echo "export PATH=$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
           source ~/.bashrc
 
       - name: Copy config.properties file
@@ -42,7 +42,7 @@ jobs:
           gradle clean test --continue || true
 
       - name: Upload Allure Results
-        uses: actions/upload-artifact@v4  
+        uses: actions/upload-artifact@v4  # ✅ Updated to v4
         with:
           name: allure-results
           path: build/allure-results/
@@ -55,10 +55,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # ✅ Updated to latest stable version
 
       - name: Download Allure Results
-        uses: actions/download-artifact@v4  
+        uses: actions/download-artifact@v4  # ✅ Ensure v4 is used
         with:
           name: allure-results
           path: build/allure-results/
@@ -70,7 +70,7 @@ jobs:
           curl -o allure.tar.gz -L https://github.com/allure-framework/allure2/releases/latest/download/allure-2.21.0.tgz
           tar -zxvf allure.tar.gz
           sudo mv allure-2.21.0 /opt/allure
-          echo "export PATH=\$PATH:/opt/allure/bin" >> ~/.bashrc
+          echo "export PATH=$PATH:/opt/allure/bin" >> ~/.bashrc
           source ~/.bashrc
 
       - name: Generate Allure Report
@@ -78,7 +78,7 @@ jobs:
           allure generate build/allure-results/ --clean -o build/allure-report/
 
       - name: Upload Allure Report as Artifact
-        uses: actions/upload-artifact@v4  
+        uses: actions/upload-artifact@v4  # ✅ Updated to v4
         with:
           name: allure-report
           path: build/allure-report/
@@ -100,4 +100,3 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v2
-
