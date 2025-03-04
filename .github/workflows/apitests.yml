@@ -93,4 +93,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: final-test-reports
-          path: build/allure-results/   # Upload Allure results from the custom path
+          path: build/allure-report/  # Upload Allure results from the custom path
