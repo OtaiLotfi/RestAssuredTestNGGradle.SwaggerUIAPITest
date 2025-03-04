@@ -38,9 +38,9 @@ jobs:
           mkdir -p build/resources/test
           cp src/test/resources/config.properties build/resources/test/
 
-      - name: Run Gradle build and tests
+      - name: Run Gradle build and tests, continue on failure
         run: |
-          gradle clean build
+          gradle clean build --continue
 
   job2:
     name: Generate Test Report
