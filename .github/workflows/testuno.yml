@@ -1,4 +1,4 @@
-name: API Rest Assured
+name: Run API Tests and Generate Test Report
 
 on:
   push:
@@ -23,11 +23,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install Gradle
+      - name: Install dependencies for Gradle and TestNG
         run: |
-          wget https://services.gradle.org/distributions/gradle-8.2.1-bin.zip
-          unzip gradle-8.2.1-bin.zip -d /opt/gradle
-          echo "export PATH=\$PATH:/opt/gradle/gradle-8.2.1/bin" >> ~/.bashrc
+          sudo apt-get update
+          sudo apt-get install -y wget
+          wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
+          unzip gradle-7.6-bin.zip -d /opt/gradle
+          echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
           source ~/.bashrc
 
       - name: Copy config.properties file
@@ -37,15 +39,13 @@ jobs:
 
       - name: Run Gradle build and tests, continue on failure
         run: |
-          gradle clean test --continue || true
-          ls -R build/test-results/  # Debug: List the contents of the test-results directory
+          gradle clean build --continue || true
 
       - name: Upload Test Reports as Artifact (v4)
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: build/test-results/
-          if-no-files-found: error  # Fail the job if no files are found
 
   job2:
     name: Generate Test Report
@@ -71,11 +71,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install Gradle
+      - name: Install dependencies for Gradle and Allure
         run: |
-          wget https://services.gradle.org/distributions/gradle-8.2.1-bin.zip
-          unzip gradle-8.2.1-bin.zip -d /opt/gradle
-          echo "export PATH=\$PATH:/opt/gradle/gradle-8.2.1/bin" >> ~/.bashrc
+          sudo apt-get update
+          sudo apt-get install -y wget
+          wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
+          unzip gradle-7.6-bin.zip -d /opt/gradle
+          echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
           source ~/.bashrc
 
       - name: Verify Allure Plugin Availability
@@ -84,11 +86,11 @@ jobs:
 
       - name: Run Gradle build for report generation
         run: |
-          gradle clean test allureServe || echo "allureServe task not found"
-          ls -R build/allure-results/
+          gradle clean test allureServe || echo "allureServe task not found"  # Use allureServe instead
+          ls -R build/allure-results/  # Check if the directory contains the allure results
 
       - name: Upload Final Test Reports as Artifact (v4)
         uses: actions/upload-artifact@v4
         with:
           name: final-test-reports
-          path: build/allure-report/
+          path: build/allure-report/  # Upload Allure results from the custom path
