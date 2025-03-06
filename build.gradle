@@ -52,11 +52,14 @@ allure {
     autoconfigure = true
     aspectjweaver = true
 
-    resultsDir = file("$buildDir/allure-results")  // Ensure test results are stored correctly
-
-    report {
-        path = "$buildDir/reports/allure-report"  // Ensure report is generated in the expected directory
+    useTestNG {
+        version = allure_version
     }
+}
+
+task allureReport(type: io.qameta.allure.gradle.task.AllureReport) {
+    resultsDir = file("$buildDir/allure-results")  // Ensure test results are stored correctly
+    reportDir = file("$buildDir/reports/allure-report")  // Ensure report is generated in the expected directory
 }
 
 test {
@@ -64,5 +67,5 @@ test {
     useTestNG() {
         suites 'testng.xml'  // Corrected to the root path of testng.xml
     }
-    finalizedBy 'allureReport'  // Ensures Allure report is generated even if tests fail
+    finalizedBy allureReport  // Ensures Allure report is generated even if tests fail
 }
