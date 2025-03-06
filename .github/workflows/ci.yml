@@ -1,4 +1,5 @@
 name: API Tests
+
 on:
   push:
     branches:
@@ -24,6 +25,14 @@ jobs:
 
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v2
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Verify Gradle Dependencies
         run: gradle dependencies --stacktrace
