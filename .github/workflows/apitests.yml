@@ -1,4 +1,4 @@
-name: Run API Tests
+name:  API Tests 
 
 on:
   push:
@@ -9,8 +9,8 @@ on:
       - master
 
 jobs:
-  test-and-report:
-    name: Run API Tests
+  run-tests-and-generate-report:
+    name: API Tests & Generate Report
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +23,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install dependencies for Gradle and TestNG
+      - name: Install Gradle
         run: |
           sudo apt-get update
           sudo apt-get install -y wget unzip
@@ -37,30 +37,22 @@ jobs:
           mkdir -p build/resources/test
           cp src/test/resources/config.properties build/resources/test/
 
-      - name: Run API Tests (Allow Failures)
+      - name: Run API Tests (Continue on Failure)
         run: |
-          chmod +x gradlew
-          ./gradlew clean test --continue || true  # Ensures workflow continues even if tests fail
+          gradle clean test --continue || true  # Ensures tests run completely even if some fail
 
-      - name: Upload Test Reports (JUnit)
+      - name: Generate Allure Report
+        run: |
+          gradle allureReport || echo "Allure report task failed, but continuing..."
+
+      - name: Upload Test Results
         uses: actions/upload-artifact@v4
         with:
-          name: test-reports
-          path: build/test-results/
+          name: test-results
+          path: build/allure-results/
 
-      - name: Install Allure for report generation
-        run: |
-          sudo apt-add-repository ppa:qameta/allure
-          sudo apt-get update
-          sudo apt-get install -y allure
-
-      - name: Generate Allure Test Report (Even if Tests Failed)
-        run: |
-          ./gradlew allureReport || echo "allureReport task not found"
-          ls -R build/allure-results/ || echo "No allure results found"
-
-      - name: Upload Final Test Reports (Allure)
+      - name: Upload Allure Report
         uses: actions/upload-artifact@v4
         with:
-          name: final-test-reports
-          path: build/allure-report/
+          name: allure-report
+          path: build/reports/allure-report/  # Ensure Allure reports are stored correctly
