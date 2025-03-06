@@ -47,13 +47,19 @@ tasks.withType(JavaCompile) {
 }
 
 allure {
-    version = "$allure_version"  // Use the same version as the plugin and dependencies
+    version = "$allure_version"
     autoconfigure = true
     aspectjweaver = true
     configuration = 'testImplementation'
 
     useTestNG {
-        version = "$allure_version"  // Use the same version
+        version = "$allure_version"
+    }
+
+    resultsDir = file("$buildDir/allure-results")  // Ensure test results are stored correctly
+
+    report {
+        path = "$buildDir/reports/allure-report"  // Ensure report is generated in the expected directory
     }
 }
 
@@ -62,4 +68,5 @@ test {
     useTestNG() {
         suites 'testng.xml'
     }
+    finalizedBy 'allureReport'  // Ensures Allure report is generated even if tests fail
 }
