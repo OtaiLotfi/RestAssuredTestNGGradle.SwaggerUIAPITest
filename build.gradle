@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'io.qameta.allure' version '2.11.2'  // Downgrade if the latest version is not found
+    id 'io.qameta.allure' version '2.11.2'  // Ensure correct version of Allure plugin
 }
 
 def assured_version = '5.4.0'
@@ -48,14 +48,9 @@ tasks.withType(JavaCompile) {
 }
 
 allure {
-    version = "$allure_version"
+    version = allure_version
     autoconfigure = true
     aspectjweaver = true
-    configuration = 'testImplementation'
-
-    useTestNG {
-        version = "$allure_version"
-    }
 
     resultsDir = file("$buildDir/allure-results")  // Ensure test results are stored correctly
 
@@ -67,7 +62,7 @@ allure {
 test {
     systemProperties System.properties
     useTestNG() {
-        suites 'testng.xml'
+        suites 'testng.xml'  // Corrected to the root path of testng.xml
     }
     finalizedBy 'allureReport'  // Ensures Allure report is generated even if tests fail
 }
