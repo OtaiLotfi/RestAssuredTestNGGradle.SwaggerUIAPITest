@@ -1,4 +1,4 @@
-name:  API Tests 
+name: API Tests
 
 on:
   push:
@@ -39,11 +39,12 @@ jobs:
 
       - name: Run API Tests (Continue on Failure)
         run: |
-          gradle clean test --continue || true  # Ensures tests run completely even if some fail
+          gradle clean test --continue || true  # Ensures tests complete even if some fail
 
       - name: Generate Allure Report
         run: |
           gradle allureReport || echo "Allure report task failed, but continuing..."
+          ls -R build/reports/allure-report/  # Verify report files exist
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
@@ -55,4 +56,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
-          path: build/reports/allure-report/  # Ensure Allure reports are stored correctly
+          path: build/reports/allure-report/  # Ensure correct upload path
