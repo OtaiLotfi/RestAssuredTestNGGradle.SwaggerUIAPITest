@@ -34,7 +34,7 @@ jobs:
 
       - name: Build and run Docker container for API Tests
         run: |
-          docker build -t api-tests .
+          docker build -t api-tests ./path/to/your/dockerfile-directory  # Specify correct path
           docker run --rm api-tests
 
       - name: Upload Allure Results
