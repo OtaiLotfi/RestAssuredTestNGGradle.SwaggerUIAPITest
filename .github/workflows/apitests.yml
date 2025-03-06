@@ -1,4 +1,5 @@
 name: Run API Tests
+
 on:
   push:
     branches:
@@ -9,7 +10,7 @@ on:
 
 jobs:
   test-and-report:
-    name: Run API Tests and Generate Test Report
+    name: Run API Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +26,7 @@ jobs:
       - name: Install dependencies for Gradle and TestNG
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget
+          sudo apt-get install -y wget unzip
           wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
           unzip gradle-7.6-bin.zip -d /opt/gradle
           echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
@@ -36,10 +37,10 @@ jobs:
           mkdir -p build/resources/test
           cp src/test/resources/config.properties build/resources/test/
 
-      - name: Run Gradle build and tests
+      - name: Run API Tests (Allow Failures)
         run: |
           chmod +x gradlew
-          ./gradlew clean test --continue || true
+          ./gradlew clean test --continue || true  # Ensures workflow continues even if tests fail
 
       - name: Upload Test Reports (JUnit)
         uses: actions/upload-artifact@v4
@@ -53,10 +54,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y allure
 
-      - name: Run Gradle build for Allure report generation
+      - name: Generate Allure Test Report (Even if Tests Failed)
         run: |
           ./gradlew allureReport || echo "allureReport task not found"
-          ls -R build/allure-results/
+          ls -R build/allure-results/ || echo "No allure results found"
 
       - name: Upload Final Test Reports (Allure)
         uses: actions/upload-artifact@v4
