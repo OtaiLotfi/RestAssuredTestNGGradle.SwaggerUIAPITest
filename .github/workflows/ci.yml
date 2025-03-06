@@ -1,5 +1,4 @@
 name: API Tests
-
 on:
   push:
     branches:
@@ -23,19 +22,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install Gradle
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget unzip
-          wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
-          unzip gradle-7.6-bin.zip -d /opt/gradle
-          echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
-          source ~/.bashrc
+      - name: Set up Gradle
+        uses: gradle/gradle-build-action@v2
 
-      - name: Copy config.properties file
-        run: |
-          mkdir -p build/resources/test
-          cp src/test/resources/config.properties build/resources/test/
+      - name: Verify Gradle Dependencies
+        run: gradle dependencies --stacktrace
 
       - name: Run API Tests (Continue on Failure)
         run: |
@@ -56,4 +47,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
-          path: build/reports/allure-report/  # Ensure correct upload path
+          path: build/reports/allure-report/
