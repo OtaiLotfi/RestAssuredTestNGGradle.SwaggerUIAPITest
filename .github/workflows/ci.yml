@@ -13,38 +13,33 @@ jobs:
     name: API Tests & Generate Report
     runs-on: ubuntu-latest
 
+    services:
+      docker:
+        image: openjdk:17-jdk-slim
+        options: --privileged # If needed to run Docker inside Docker
+        ports:
+          - 8080:8080  # Expose any required ports
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Set up Gradle
-        uses: gradle/gradle-build-action@v2
-
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Verify Gradle Dependencies
-        run: gradle dependencies --stacktrace
-
-      - name: Run API Tests (Continue on Failure)
+      - name: Set up Docker
         run: |
-          gradle clean test --continue || true  # Ensures tests complete even if some fail
+          docker --version
+          docker-compose --version  # Ensure Docker is available
 
-      - name: Generate Allure Report
+      - name: Build Docker image
         run: |
-          gradle allureReport || echo "Allure report task failed, but continuing..."
-          ls -R build/reports/allure-report/  # Verify report files exist
+          docker build -t my-api-tests .  # Build Docker image from your Dockerfile
+
+      - name: Run API Tests inside Docker
+        run: |
+          docker run --rm my-api-tests gradle clean test --continue || true  # Run tests inside Docker container
+
+      - name: Generate Allure Report inside Docker
+        run: |
+          docker run --rm my-api-tests gradle allureReport || echo "Allure report task failed, but continuing..."
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
