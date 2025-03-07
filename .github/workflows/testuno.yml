@@ -44,7 +44,7 @@ jobs:
       - name: Upload Test Reports as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: allure-results
+          name: allure-results-custom
           path: build/allure-results/
 
   job2:
@@ -59,7 +59,7 @@ jobs:
       - name: Download Allure Results
         uses: actions/download-artifact@v4
         with:
-          name: allure-results
+          name: allure-results-custom
           path: allure-results/
 
       - name: Display Allure Result Files
@@ -88,5 +88,5 @@ jobs:
       - name: Upload Final Allure Report as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report
+          name: allure-report-custom
           path: allure-report/
