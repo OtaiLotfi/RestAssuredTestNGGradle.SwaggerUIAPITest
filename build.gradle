@@ -6,7 +6,7 @@ plugins {
 def assured_version = '5.4.0'
 def apache_poi_version = '5.2.5'
 def slf4j_version = '2.0.13'
-def allure_version = '2.27.0'
+def allure_version = '2.13.9' // Updated to match the version used in your CI
 def apache_logging_version = '2.23.1'
 
 repositories {
@@ -45,11 +45,23 @@ test {
 }
 
 allure {
-    version = '2.13.9'
+    version = '2.13.9'  // Ensuring the correct Allure version
     autoconfigure = true
     aspectjweaver = true
 }
 
 tasks.named('check') {
     dependsOn tasks.named('allureReport')
+}
+
+// Custom task to generate Allure report after tests
+task generateAllureReport(type: Exec) {
+    description = 'Generates Allure Report'
+    group = 'Reporting'
+
+    commandLine 'allure', 'generate', 'build/allure-results', '-o', 'build/allure-report', '--clean'
+}
+
+tasks.named('check') {
+    dependsOn generateAllureReport
 }
