@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="All PetStore API Tests" verbose="2" parallel="tests" thread-count="2">
-    <listeners>
-        <!-- Allure listener for TestNG -->
-        <listener class-name="io.qameta.allure.testng.AllureTestNGListener"/>
-    </listeners>
-    
-    <test name="Pet Controller Tests">
+<suite name="All PetStore API Tests">
+    <test verbose="2" name="Pet Controller Tests">
         <classes>
             <class name="test.petStoreTests.PetTests">
                 <methods>
@@ -29,8 +24,7 @@
             </class>
         </classes>
     </test>
-    
-    <test name="Store Controller Tests">
+    <test verbose="2" name="Store Controller Tests">
         <classes>
             <class name="test.petStoreTests.StoreTests">
                 <methods>
@@ -42,8 +36,7 @@
             </class>
         </classes>
     </test>
-    
-    <test name="User Controller Tests">
+    <test verbose="2" name="User Controller Tests">
         <classes>
             <class name="test.petStoreTests.UserTests">
                 <methods>
