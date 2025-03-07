@@ -28,7 +28,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y wget
           wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
-          unzip gradle-7.6-bin.zip -d /opt/gradle
+          unzip -o gradle-7.6-bin.zip -d /opt/gradle  # Added -o to overwrite existing files
           echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
           source ~/.bashrc
 
@@ -61,7 +61,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y wget
           wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
-          unzip gradle-7.6-bin.zip -d /opt/gradle
+          unzip -o gradle-7.6-bin.zip -d /opt/gradle  # Added -o to overwrite existing files
           echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
           source ~/.bashrc
 
