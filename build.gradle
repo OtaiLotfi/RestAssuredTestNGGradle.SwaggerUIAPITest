@@ -37,23 +37,24 @@ tasks.withType(JavaCompile) {
     targetCompatibility = '17'
 }
 
+// Run tests and then generate Allure report
 test {
     systemProperties System.properties
     useTestNG() {
         suites 'testng.xml'
     }
-    finalizedBy generateAllureReport // Ensures Allure report is generated after tests
+    // Ensure that Allure Report is generated after tests run
+    finalizedBy generateAllureReport
 }
 
 allure {
     version = '2.13.9'  // Ensuring the correct Allure version
     autoconfigure = true
     aspectjweaver = true
-    // Custom path for allure results directory
     resultsDir = file("build/allure-results")
 }
 
-// Custom task to generate Allure report after tests
+// Task to generate Allure report after tests
 task generateAllureReport(type: Exec) {
     description = 'Generates Allure Report'
     group = 'Reporting'
@@ -62,7 +63,6 @@ task generateAllureReport(type: Exec) {
     commandLine 'allure', 'generate', 'build/allure-results', '-o', 'build/allure-report', '--clean'
 }
 
-// Ensuring that the 'check' task depends on 'generateAllureReport' task
 tasks.named('check') {
     dependsOn generateAllureReport
 }
