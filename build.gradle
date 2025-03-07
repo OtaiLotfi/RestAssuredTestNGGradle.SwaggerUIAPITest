@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'io.qameta.allure' version '2.9.6'  // Adding Allure plugin for report generation
+    id 'io.qameta.allure' version '2.9.6'
 }
 
 def assured_version = '5.4.0'
@@ -45,12 +45,11 @@ test {
 }
 
 allure {
-    version = '2.13.9'  // Specify the version of Allure
+    version = '2.13.9'
     autoconfigure = true
     aspectjweaver = true
 }
 
 tasks.named('check') {
-    dependsOn tasks.named('allureReport')  // Ensure the allureReport task runs as part of check
+    dependsOn tasks.named('allureReport')
 }
-
