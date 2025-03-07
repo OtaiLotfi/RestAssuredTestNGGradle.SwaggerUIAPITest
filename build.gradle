@@ -6,7 +6,7 @@ plugins {
 def assured_version = '5.4.0'
 def apache_poi_version = '5.2.5'
 def slf4j_version = '2.0.13'
-def allure_version = '2.13.9' // Ensuring correct Allure version
+def allure_version = '2.13.9'  // Ensuring correct Allure version
 def apache_logging_version = '2.23.1'
 
 repositories {
@@ -49,6 +49,8 @@ allure {
     version = '2.13.9'  // Ensuring the correct Allure version
     autoconfigure = true
     aspectjweaver = true
+    // Custom path for allure results directory
+    resultsDir = file("build/allure-results")
 }
 
 // Custom task to generate Allure report after tests
@@ -56,10 +58,11 @@ task generateAllureReport(type: Exec) {
     description = 'Generates Allure Report'
     group = 'Reporting'
 
+    // Ensure the correct path is passed based on allure.properties
     commandLine 'allure', 'generate', 'build/allure-results', '-o', 'build/allure-report', '--clean'
 }
 
-// Ensuring that check task depends on allureReport task
+// Ensuring that the 'check' task depends on 'generateAllureReport' task
 tasks.named('check') {
     dependsOn generateAllureReport
 }
