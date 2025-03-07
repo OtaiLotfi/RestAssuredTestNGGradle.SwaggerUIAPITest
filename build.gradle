@@ -53,4 +53,3 @@ allure {
 tasks.named('check') {
     dependsOn tasks.named('allureReport')  // Ensure the allureReport task runs as part of check
 }
-
