@@ -60,9 +60,10 @@ tasks.named('check') {
     dependsOn generateAllureReport
 }
 
+// Allure plugin configuration without resultsDir property
 allure {
     version = '2.13.9'  // Ensuring the correct Allure version
     autoconfigure = true
     aspectjweaver = true
-    resultsDir = file("build/allure-results")
+    // You can configure the resultsDir in the 'generateAllureReport' task itself
 }
