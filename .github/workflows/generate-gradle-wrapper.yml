@@ -1,0 +1,36 @@
+name: Generate Gradle Wrapper
+
+on:
+  workflow_dispatch:  # Allows you to trigger this workflow manually from GitHub UI
+
+jobs:
+  generate-wrapper:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install Gradle (to generate wrapper)
+        run: |
+          wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
+          unzip gradle-7.6-bin.zip -d /opt/gradle
+          echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
+          source ~/.bashrc
+
+      - name: Generate Gradle Wrapper
+        run: gradle wrapper
+
+      - name: Commit and push wrapper files
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add gradlew gradlew.bat gradle/wrapper
+          git commit -m "Add Gradle wrapper"
+          git push
