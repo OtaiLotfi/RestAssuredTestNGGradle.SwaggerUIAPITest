@@ -60,10 +60,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: allure-results
-          path: build/allure-results/
+          path: allure-results/
 
       - name: Display Allure Result Files
-        run: ls -R build/allure-results/
+        run: |
+          ls -R allure-results/
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -77,12 +78,15 @@ jobs:
           sudo mv allure-2.13.9 /opt/allure
           sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
 
+      - name: Check Allure Version
+        run: allure --version
+
       - name: Generate Allure Report
         run: |
-          allure generate build/allure-results -o build/allure-report --clean
+          allure generate allure-results/ -o allure-report/ --clean
 
       - name: Upload Final Allure Report as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
-          path: build/allure-report/
+          path: allure-report/
