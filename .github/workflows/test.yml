@@ -29,17 +29,22 @@ jobs:
           sudo apt-get install -y wget unzip
           wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
           unzip gradle-7.6-bin.zip -d /opt/gradle
-          echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
+          echo "export PATH=$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
           source ~/.bashrc
+
       - name: Copy config.properties file
         run: |
           mkdir -p build/resources/test
           cp src/test/resources/config.properties build/resources/test/
-      - name: Run Gradle build and tests, continue on failure
+
+      - name: Run Gradle build and tests (continue even if failed)
         run: |
-          gradle clean test --continue || true
-      - name: Upload Allure Results
-        uses: actions/upload-artifact@v4  # Using v4 for uploading artifacts
+          chmod +x gradlew
+          ./gradlew clean test --continue
+
+      - name: Upload Allure Results (Even if tests fail)
+        if: always()  # Ensures upload happens even if tests fail
+        uses: actions/upload-artifact@v4
         with:
           name: allure-results
           path: build/allure-results/
@@ -55,7 +60,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Download Allure Results
-        uses: actions/download-artifact@v4  # Using v4 for downloading artifacts
+        uses: actions/download-artifact@v4
         with:
           name: allure-results
           path: build/allure-results/
@@ -67,13 +72,17 @@ jobs:
           curl -o allure.tar.gz -L https://github.com/allure-framework/allure2/releases/latest/download/allure-2.21.0.tgz
           tar -zxvf allure.tar.gz
           sudo mv allure-2.21.0 /opt/allure
-          echo "export PATH=\$PATH:/opt/allure/bin" >> ~/.bashrc
+          echo "export PATH=$PATH:/opt/allure/bin" >> ~/.bashrc
           source ~/.bashrc
-      - name: Generate Allure Report
+
+      - name: Generate Allure Report (Allow failure)
         run: |
-          allure generate build/allure-results/ --clean -o build/allure-report/
-      - name: Upload Allure Report as Artifact
-        uses: actions/upload-artifact@v4  # Using v4 for uploading artifacts
+          mkdir -p build/allure-report
+          allure generate build/allure-results/ --clean -o build/allure-report/ || true
+
+      - name: Upload Allure Report as Artifact (Even if report generation fails)
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: allure-report
           path: build/allure-report/
