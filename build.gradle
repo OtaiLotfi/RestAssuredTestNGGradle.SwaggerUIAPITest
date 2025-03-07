@@ -1,12 +1,12 @@
 plugins {
     id 'java'
-    id 'io.qameta.allure' version '2.9.6'
+    id 'io.qameta.allure' version '2.9.6'  // Adding Allure plugin for report generation
 }
 
 def assured_version = '5.4.0'
 def apache_poi_version = '5.2.5'
 def slf4j_version = '2.0.13'
-def allure_version = '2.13.9'  // Ensuring correct Allure version
+def allure_version = '2.27.0'
 def apache_logging_version = '2.23.1'
 
 repositories {
@@ -37,33 +37,20 @@ tasks.withType(JavaCompile) {
     targetCompatibility = '17'
 }
 
-// Ensure that the Allure report generation happens after tests
 test {
     systemProperties System.properties
     useTestNG() {
         suites 'testng.xml'
     }
-    finalizedBy 'generateAllureReport' // Ensure Allure Report is generated after tests
 }
 
-// Task to generate Allure report after tests
-task generateAllureReport(type: Exec) {
-    description = 'Generates Allure Report'
-    group = 'Reporting'
-
-    // Ensure the correct path is passed based on allure.properties
-    commandLine 'allure', 'generate', 'build/allure-results', '-o', 'build/allure-report', '--clean'
-}
-
-// Ensure 'generateAllureReport' is added to the 'check' task
-tasks.named('check') {
-    dependsOn generateAllureReport
-}
-
-// Allure plugin configuration without resultsDir property
 allure {
-    version = '2.13.9'  // Ensuring the correct Allure version
+    version = '2.13.9'  // Specify the version of Allure
     autoconfigure = true
     aspectjweaver = true
-    // You can configure the resultsDir in the 'generateAllureReport' task itself
 }
+
+tasks.named('check') {
+    dependsOn tasks.named('allureReport')  // Ensure the allureReport task runs as part of check
+}
+
