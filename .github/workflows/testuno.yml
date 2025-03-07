@@ -41,7 +41,7 @@ jobs:
         run: |
           gradle clean test --continue || true
 
-      # Add debugging step to verify allure-results folder exists
+      # Debugging: Verify allure-results directory exists
       - name: List build/allure-results directory (Debug)
         run: |
           if [ -d "build/allure-results" ]; then
@@ -50,6 +50,11 @@ jobs:
           else
             echo "No allure-results directory found."
           fi
+
+      # Debugging: Verify if any files are present before uploading
+      - name: Verify files in allure-results (Debug)
+        run: |
+          ls -R build/allure-results || echo "No allure-results to list"
 
       - name: Upload Test Reports as Artifact
         uses: actions/upload-artifact@v4
@@ -72,7 +77,7 @@ jobs:
           name: allure-results-custom
           path: allure-results/
 
-      # Add debugging step to verify the downloaded directory
+      # Debugging: Verify the downloaded directory
       - name: List downloaded allure-results directory (Debug)
         run: |
           if [ -d "allure-results" ]; then
