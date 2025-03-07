@@ -41,6 +41,11 @@ jobs:
         run: |
           gradle clean test --continue || true
 
+      # Add debugging step to verify allure-results folder exists
+      - name: List build/allure-results directory
+        run: |
+          ls -R build/allure-results/
+
       - name: Upload Test Reports as Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -61,6 +66,11 @@ jobs:
         with:
           name: allure-results-custom
           path: allure-results/
+
+      # Add debugging step to verify the downloaded directory
+      - name: List downloaded allure-results directory
+        run: |
+          ls -R allure-results/
 
       - name: Display Allure Result Files
         run: |
