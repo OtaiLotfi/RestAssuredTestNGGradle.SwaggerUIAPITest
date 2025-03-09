@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'io.qameta.allure' version '2.9.0'  // Adding Allure plugin for report generation
+    id 'io.qameta.allure' version '2.9.6'
 }
 
 def assured_version = '5.4.0'
@@ -45,7 +45,7 @@ test {
 }
 
 allure {
-    version = '2.14.0'
+    version = '2.13.9'
     autoconfigure = true
     reportDir = file("build/allure-report")
 }
