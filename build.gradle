@@ -1,13 +1,10 @@
 plugins {
     id 'java'
-    id 'io.qameta.allure' version '2.11.2'  // Upgraded Allure plugin for better reporting support
+    id 'io.qameta.allure' version '2.11.2'
 }
 
 def assured_version = '5.4.0'
-def apache_poi_version = '5.2.5'
-def slf4j_version = '2.0.13'
 def allure_version = '2.27.0'
-def apache_logging_version = '2.23.1'
 
 repositories {
     mavenLocal()
@@ -16,20 +13,8 @@ repositories {
 
 dependencies {
     testImplementation "io.rest-assured:rest-assured:$assured_version"
-    testImplementation "io.rest-assured:json-path:$assured_version"
-    testImplementation "io.rest-assured:json-schema-validator:$assured_version"
-    testImplementation "org.testng:testng:7.10.2"
-    testImplementation "com.github.scribejava:scribejava-apis:8.3.3"
-    testImplementation "com.aventstack:extentreports:5.1.1"
-    testImplementation "org.apache.poi:poi:$apache_poi_version"
-    testImplementation "org.apache.poi:poi-ooxml:$apache_poi_version"
-    testImplementation "org.slf4j:slf4j-api:$slf4j_version"
-    testImplementation "org.slf4j:slf4j-simple:$slf4j_version"
     testImplementation "io.qameta.allure:allure-testng:$allure_version"
     testImplementation "io.qameta.allure:allure-rest-assured:$allure_version"
-    testImplementation "org.apache.logging.log4j:log4j-core:$apache_logging_version"
-    testImplementation "org.apache.logging.log4j:log4j-api:$apache_logging_version"
-    implementation 'org.json:json:20210307'
 }
 
 tasks.withType(JavaCompile) {
@@ -45,11 +30,20 @@ test {
 }
 
 allure {
-    version = '2.27.0'  // Updated to match allure dependencies
+    version = '2.27.0'
     autoconfigure = true
     aspectjweaver = true
 }
 
 tasks.named('check') {
-    dependsOn tasks.named('allureReport')  // Ensure allureReport task runs
+    dependsOn tasks.named('allureReport')
+}
+
+task copyAllureResults(type: Copy) {
+    from "build/allure-results"
+    into "build/allure-report"
+}
+
+tasks.named("allureReport") {
+    finalizedBy copyAllureResults
 }
