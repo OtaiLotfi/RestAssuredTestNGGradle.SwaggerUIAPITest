@@ -1,4 +1,4 @@
-name: API Tests and Generate Test Repor
+name: Run API Tests and Generate Test Report
 
 on:
   push:
@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies for Gradle and TestNG
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget
+          sudo apt-get install -y wget unzip
           wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
           unzip gradle-7.6-bin.zip -d /opt/gradle
           echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
@@ -39,13 +39,20 @@ jobs:
 
       - name: Run Gradle build and tests, continue on failure
         run: |
-          gradle clean build --continue || true
+          gradle clean test --continue || true
 
       - name: Upload Test Reports as Artifact (v4)
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: build/test-results/
+
+      - name: Upload Allure Results (if available)
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: build/allure-results/
+          if-no-files-found: ignore  # Avoid failure if no results exist
 
   job2:
     name: Generate Test Report
@@ -59,11 +66,8 @@ jobs:
       - name: Download Test Reports
         uses: actions/download-artifact@v4
         with:
-          name: test-reports
-          path: test-reports
-
-      - name: Display Test Report Files
-        run: ls -R test-reports
+          name: allure-results
+          path: build/allure-results/
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -74,23 +78,23 @@ jobs:
       - name: Install dependencies for Gradle and Allure
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget
+          sudo apt-get install -y wget unzip
           wget https://services.gradle.org/distributions/gradle-7.6-bin.zip
           unzip gradle-7.6-bin.zip -d /opt/gradle
           echo "export PATH=\$PATH:/opt/gradle/gradle-7.6/bin" >> ~/.bashrc
           source ~/.bashrc
 
       - name: Verify Allure Plugin Availability
-        run: |
-          gradle tasks --all
+        run: gradle tasks --all
 
-      - name: Run Gradle build for report generation
+      - name: Generate Allure Report
         run: |
-          gradle clean test allureReport || echo "allureReport task not found"  # Corrected task to allureReport
-          ls -R build/allure-results/  # Check if the directory contains the allure results
+          gradle allureReport || echo "Allure Report task not found"
+          ls -R build/allure-report/ || echo "No Allure report generated"
 
       - name: Upload Final Test Reports as Artifact (v4)
         uses: actions/upload-artifact@v4
         with:
           name: final-test-reports
-          path: build/allure-report/  # Upload Allure results from the custom path
+          path: build/allure-report/
+          if-no-files-found: warn  # Avoid job failure if no report exists
