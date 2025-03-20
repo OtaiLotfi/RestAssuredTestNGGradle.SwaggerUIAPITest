@@ -86,18 +86,11 @@ jobs:
 
       - name: Run Gradle build for report generation
         run: |
-          gradle clean test allureReport || echo "allureReport task not found"  
+          gradle clean test allureReport || echo "allureReport task not found"  # Corrected task to allureReport
           ls -R build/allure-results/  # Check if the directory contains the allure results
 
       - name: Upload Final Test Reports as Artifact (v4)
-        id: upload-artifact
         uses: actions/upload-artifact@v4
         with:
           name: final-test-reports
           path: build/allure-report/  # Upload Allure results from the custom path
-
-      - name: Set Artifact URL
-        run: echo "ARTIFACT_URL=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_ENV
-
-      - name: Print Artifact URL
-        run: echo "Artifact is available at: ${{ env.ARTIFACT_URL }}"
