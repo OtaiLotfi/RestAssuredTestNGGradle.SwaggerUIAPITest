@@ -92,5 +92,5 @@ jobs:
       - name: Upload Final Test Reports as Artifact (v4)
         uses: actions/upload-artifact@v4
         with:
-          name: final-test-reports
-          path: build/allure-report/ 
+          name: final-test-reports   
+          path: build/allure-report/    
